@@ -1,47 +1,76 @@
 import java.util.*;
 
-public class PalindromeCheckerApp {
-    static void main() {
-        Scanner sc = new Scanner(System.in);
+class Node {
+    char data;
+    Node next;
 
+    Node(char data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+public class PalindromeCheckerApp {
+    public static Node reverse(Node head) {
+        Node prev = null;
+        Node current = head;
+        while (current != null) {
+            Node nextNode = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextNode;
+        }
+        return prev;
+    }
+
+    // Check palindrome
+    public static boolean isPalindrome(Node head) {
+        if (head == null || head.next == null)
+            return true;
+        Node slow = head;
+        Node fast = head;
+        // Find middle using fast & slow pointer
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        // Reverse second half
+        Node secondHalf = reverse(slow);
+        Node firstHalf = head;
+        // Compare both halves
+        while (secondHalf != null) {
+            if (firstHalf.data != secondHalf.data) {
+                return false;
+            }
+            firstHalf = firstHalf.next;
+            secondHalf = secondHalf.next;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         System.out.print("Enter a string: ");
         String input = sc.nextLine();
-
-        // Convert to lowercase and remove spaces
         input = input.replaceAll("\\s+", "").toLowerCase();
-
-        // Create Queue and Stack
-        Queue<Character> queue = new LinkedList<>();
-        Stack<Character> stack = new Stack<>();
-
-        // Insert characters into Queue and Stack
+        Node head = null;
+        Node temp = null;
+        // Convert string to linked list
         for (int i = 0; i < input.length(); i++) {
-            char ch = input.charAt(i);
-            queue.add(ch);      // Enqueue
-            stack.push(ch);     // Push
-        }
-
-        boolean isPalindrome = true;
-
-        // Compare dequeue and pop
-        while (!queue.isEmpty()) {
-
-            char qChar = queue.remove();  // Dequeue
-            char sChar = stack.pop();     // Pop
-
-            if (qChar != sChar) {
-                isPalindrome = false;
-                break;
+            Node newNode = new Node(input.charAt(i));
+            if (head == null) {
+                head = newNode;
+                temp = head;
+            } else {
+                temp.next = newNode;
+                temp = newNode;
             }
         }
-
-        // Result
-        if (isPalindrome) {
+        // Check palindrome
+        if (isPalindrome(head)) {
             System.out.println("The given string is a PALINDROME.");
         } else {
             System.out.println("The given string is NOT a palindrome.");
         }
-
         sc.close();
     }
 }
