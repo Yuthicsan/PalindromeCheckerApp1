@@ -1,28 +1,44 @@
-import java.util.Stack;
+import java.util.*;
 
 public class PalindromeCheckerApp {
     static void main() {
-        String word = "madam";
+        Scanner sc = new Scanner(System.in);
 
-        // Create a stack
-        Stack<Character> stack = new Stack<>();
+        System.out.print("Enter a string: ");
+        String input = sc.nextLine();
 
-        // Push characters into stack
-        for (int i = 0; i < word.length(); i++) {
-            stack.push(word.charAt(i));
+        // Convert to lowercase and remove spaces
+        input = input.replaceAll("\\s+", "").toLowerCase();
+
+        // Create Deque
+        Deque<Character> deque = new ArrayDeque<>();
+
+        // Insert characters into deque
+        for (int i = 0; i < input.length(); i++) {
+            deque.addLast(input.charAt(i));
         }
 
-        // Pop characters and build reversed string
-        String reversed = "";
-        while (!stack.isEmpty()) {
-            reversed = reversed + stack.pop();
+        boolean isPalindrome = true;
+
+        // Compare front and rear
+        while (deque.size() > 1) {
+
+            char first = deque.removeFirst();
+            char last = deque.removeLast();
+
+            if (first != last) {
+                isPalindrome = false;
+                break;
+            }
         }
 
-        // Compare original and reversed string
-        if (word.equals(reversed)) {
-            System.out.println(word + " is a Palindrome.");
+        // Result
+        if (isPalindrome) {
+            System.out.println("The given string is a PALINDROME.");
         } else {
-            System.out.println(word + " is not a Palindrome.");
+            System.out.println("The given string is NOT a palindrome.");
         }
+
+        sc.close();
     }
 }
